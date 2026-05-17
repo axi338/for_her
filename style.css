@@ -42,13 +42,13 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -2;
+    z-index: -1;
     background-image: url('photos_to_use/background.jpg');
     background-size: cover;
     background-position: center top;
     background-repeat: no-repeat;
-    opacity: 0.18;
-    filter: grayscale(30%);
+    opacity: 0.22;
+    mix-blend-mode: multiply;
     pointer-events: none;
 }
 
@@ -517,6 +517,38 @@ section.view {
     color: var(--cream);
     font-size: 3rem;
     cursor: pointer;
+    z-index: 2005;
+}
+
+/* Mobile Karaoke & Fixes */
+@media (max-width: 768px) {
+    #lyrics-container {
+        max-width: 95%;
+        padding: 0 10px;
+    }
+
+    .lyric-line {
+        font-size: 1.6rem;
+        margin: 0.8rem 0;
+    }
+
+    .lyric-line span {
+        font-size: 1rem !important;
+        line-height: 1.3;
+        margin-top: 5px;
+    }
+
+    .lyric-line.active {
+        transform: scale(1.05);
+        /* smaller scale for mobile to prevent overflow */
+    }
+
+    .close-btn {
+        top: 1rem;
+        right: 1.5rem;
+        font-size: 2.5rem;
+        padding: 10px;
+    }
 }
 
 /* 5. Lily Section (Swipeable Gallery) */
