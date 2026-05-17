@@ -233,9 +233,9 @@ const COMPLIMENTS = [
 
 const LILY_GALLERY = [
     { src: "photos_to_use/photo_5.webp", text: "I know you like to write rather than talk about your feelings" },
-    { src: "photos_to_use/photo_6.webp", text: "Your smile lights up the entire world." },
-    { src: "photos_to_use/photo_7.webp", text: "You are a masterpiece of soft-heartedness." },
-    { src: "photos_to_use/photo_star.webp", text: "Every word you say sounds like a melody." },
+    { src: "photos_to_use/photo_6.webp", text: "Every time it rains it gives a different feeling." },
+    { src: "photos_to_use/photo_7.webp", text: "Fairuz's voice is the sound of home." },
+    { src: "photos_to_use/photo_star.webp", text: "eyes like stars" },
     { src: "photos_to_use/photo_youtube.webp", text: "I could listen to your voice forever." },
     { src: "photos_to_use/photo_icon.webp", text: "Every word you say sounds like a melody." }
 ];
