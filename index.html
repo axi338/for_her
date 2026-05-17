@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lisa</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <!-- Static Background Photo -->
+    <div id="photo-bg"></div>
+
+    <!-- Background Video Container -->
+    <div id="video-bg-container">
+        <video id="bg-video" autoplay muted loop playsinline></video>
+        <div class="video-overlay"></div>
+    </div>
+
+    <!-- Floating Background Words Container -->
+    <div id="floating-words-container"></div>
+
+    <!-- Mood Switcher -->
+    <div id="mood-switcher">
+        <button class="mood-btn" data-mood="spring">🌸 Spring</button>
+        <button class="mood-btn" data-mood="autumn">🍂 Autumn</button>
+        <button class="mood-btn" data-mood="rainy">🌧️ Rainy</button>
+    </div>
+
+    <!-- Canvas for falling lily petals -->
+    <canvas id="petal-canvas"></canvas>
+
+    <!-- 1. Opening Screen -->
+    <section id="opening-screen" class="active">
+        <div class="overlay"></div>
+        <div class="intro-content">
+            <h1 class="magical-text" id="intro-line-1"></h1>
+            <h2 class="magical-text" id="intro-line-2"></h2>
+            <p class="magical-text" id="intro-line-3"></p>
+            <button id="open-world-btn" class="gold-btn">Open your little world</button>
+        </div>
+    </section>
+
+    <!-- Main Content Wrapped for smooth transition -->
+    <main id="main-content" class="hidden">
+
+        <!-- Navigation (Optional but helpful for smooth UX) -->
+        <nav id="top-nav">
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#fairuz">Music</a>
+                <a href="#lilies">Lilies</a>
+                <a href="#notes">Notes</a>
+                <a href="#memories">Memory Cards</a>
+            </div>
+        </nav>
+
+        <!-- 2. Home Section -->
+        <section id="home" class="view">
+            <div class="carpet-container">
+                <!-- Much better placement for the decorative lilies -->
+                <img src="photos_to_use/photo_3.jpg" alt="Lily" class="background-lily lily-left">
+                <img src="photos_to_use/photo_3.jpg" alt="Lily" class="background-lily lily-right">
+
+                <div class="paper-card main-card">
+                    <p class="romantic-quote">
+                        “Some people feel like music, some like flowers, some like home.
+                        Somehow, you feel like all three.”
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Fairuz Music Player -->
+        <section id="fairuz" class="view">
+            <div class="spotify-player-container">
+                <div class="player-header">
+                    <p class="now-playing-device">iPhone</p>
+                </div>
+                <div class="album-art-wrapper">
+                    <img src="photos_to_use/photo_1.webp" alt="Fairuz Album Art" id="album-art"
+                        class="spotify-album-art">
+                </div>
+
+                <div class="track-info-spotify">
+                    <h3 id="current-song-title">Ana Lahabeebi</h3>
+                    <p class="artist-name" id="current-artist">Fairuz</p>
+                </div>
+
+                <div class="progress-container">
+                    <span id="current-time">0:00</span>
+                    <input type="range" id="progress-bar" min="0" max="100" value="0">
+                    <span id="total-time">0:00</span>
+                </div>
+
+                <div class="audio-controls-spotify">
+                    <button id="prev-btn" class="icon-btn-spotify">⏮</button>
+                    <button id="play-pause-btn" class="icon-btn-spotify main-play-spotify">▶</button>
+                    <button id="next-btn" class="icon-btn-spotify">⏭</button>
+                </div>
+
+                <div class="extra-controls">
+                    <button id="karaoke-toggle" class="gold-btn spotify-karaoke-btn">Karaoke Lyrics</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Karaoke Lyrics Mode Overlay -->
+        <div id="karaoke-overlay" class="hidden">
+            <button id="close-karaoke" class="close-btn">&times;</button>
+            <div id="lyrics-container">
+                <!-- Lyrics injected here -->
+            </div>
+        </div>
+
+        <!-- 5. Lily Section (Swipeable Gallery) -->
+        <section id="lilies" class="view">
+            <h2 class="section-title">Garden of Lilies</h2>
+            <div class="swipeable-gallery" id="lily-gallery">
+                <!-- Lily cards will be injected here via JS -->
+            </div>
+            <div class="swipe-hint">Swipe to explore <span>&rarr;</span></div>
+        </section>
+
+        <!-- 6. Notes Section -->
+        <section id="notes" class="view">
+            <h2 class="section-title">Notes to Remember</h2>
+            <div class="notebook">
+                <textarea id="note-input" placeholder="Save a memory here..."></textarea>
+                <button id="save-note" class="gold-btn">Save this memory</button>
+            </div>
+            <div id="notes-grid" class="notes-grid">
+                <!-- Saved notes appear here as paper cards -->
+            </div>
+        </section>
+
+        <!-- 7. Memory Cards -->
+        <section id="memories" class="view">
+            <h2 class="section-title">Reasons why</h2>
+            <div class="memory-grid">
+                <!-- Memory cards will be injected here -->
+            </div>
+        </section>
+
+        <!-- 8. Final Section -->
+        <section id="final-section" class="view">
+            <div class="final-card" style="text-align: center;">
+                <p>“This website is small, but the feeling behind it is not.”</p>
+                <h3 class="lisa-tribute">For the Pritiest girl Lisa</h3>
+                <p class="little-comment">i know you liked it</p>
+                <button id="replay-magic" class="gold-btn">Replay the magic</button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Hidden Audio Element -->
+    <audio id="main-audio"></audio>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
