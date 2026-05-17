@@ -220,12 +220,11 @@ const SONG_LIST = [
 ];
 
 const COMPLIMENTS = [
-    "You are the kindest person I've ever met.",
-    "Your smile lights up my entire world.",
-    "I am so lucky to have you in my life.",
+    "I know you like to write rather than talk about your feelings",
+    "Your smile lights up the entire world.",
     "You are a masterpiece of soft-heartedness.",
     "Every word you say sounds like a melody.",
-    "You are my favorite home.",
+    "Your voice still rings in my ears.",
     "You make the world a softer place.",
     "Being with you feels like walking through a blooming garden.",
     "Your presence brings peace to my heart.",
@@ -233,10 +232,10 @@ const COMPLIMENTS = [
 ];
 
 const LILY_GALLERY = [
-    { src: "photos_to_use/photo_5.webp", text: "You make the world a softer place." },
-    { src: "photos_to_use/photo_6.webp", text: "Being with you feels like walking through a blooming garden." },
-    { src: "photos_to_use/photo_7.webp", text: "Your presence brings peace to my heart." },
-    { src: "photos_to_use/photo_star.webp", text: "I am so lucky to have you in my life." },
+    { src: "photos_to_use/photo_5.webp", text: "I know you like to write rather than talk about your feelings" },
+    { src: "photos_to_use/photo_6.webp", text: "Your smile lights up the entire world." },
+    { src: "photos_to_use/photo_7.webp", text: "You are a masterpiece of soft-heartedness." },
+    { src: "photos_to_use/photo_star.webp", text: "Every word you say sounds like a melody." },
     { src: "photos_to_use/photo_youtube.webp", text: "I could listen to your voice forever." },
     { src: "photos_to_use/photo_icon.webp", text: "Every word you say sounds like a melody." }
 ];
