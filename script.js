@@ -434,21 +434,10 @@ function initMessageWidget() {
 
         status.textContent = 'Sending...';
 
+        const visitor = getTrackedVisitor();
+
         try {
-            const visitor = getTrackedVisitor();
-            const response = await fetch('/.netlify/functions/messages', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    visitor_id: visitor.id,
-                    text
-                })
-            });
-
-            if (!response.ok) throw new Error('Message failed');
-
+            await sendVisitorMessage(visitor, text);
             input.value = '';
             status.textContent = 'Sent';
             await loadVisitorMessages();
@@ -462,6 +451,49 @@ function initMessageWidget() {
             loadVisitorMessages();
         }
     }, 15000);
+}
+
+async function sendVisitorMessage(visitor, text) {
+    const payload = {
+        visitor_id: visitor.id,
+        text
+    };
+
+    try {
+        const response = await fetch('/.netlify/functions/messages', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (response.ok) return;
+    } catch (error) {
+        // Fall through to the Netlify Forms backup below.
+    }
+
+    const fallbackPayload = {
+        'form-name': 'message-tracker',
+        visitor_id: visitor.id,
+        message: text,
+        created_at: new Date().toISOString(),
+        path: window.location.pathname + window.location.search,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'unknown',
+        user_agent: navigator.userAgent
+    };
+
+    const fallbackResponse = await fetch('/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams(fallbackPayload).toString()
+    });
+
+    if (!fallbackResponse.ok) {
+        throw new Error('Message failed');
+    }
 }
 
 async function loadVisitorMessages() {
