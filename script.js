@@ -307,6 +307,7 @@ const MOODS = {
 // --- Initialization ---
 
 document.addEventListener('DOMContentLoaded', () => {
+    initVisitTracking();
     initIntro();
     initPetals();
     initFloatingWords();
@@ -316,6 +317,86 @@ document.addEventListener('DOMContentLoaded', () => {
     initMemories();
     initMoods();
 });
+
+// --- Visit Tracking ---
+
+function initVisitTracking() {
+    const storageKey = 'lisa_visit_tracker';
+    const now = new Date().toISOString();
+    let visitor = null;
+
+    try {
+        visitor = JSON.parse(localStorage.getItem(storageKey) || 'null');
+    } catch (error) {
+        visitor = null;
+    }
+
+    if (!visitor || !visitor.id) {
+        visitor = {
+            id: createVisitorId(),
+            firstSeen: now,
+            visitCount: 0
+        };
+    }
+
+    visitor.visitCount += 1;
+    visitor.lastSeen = now;
+
+    try {
+        localStorage.setItem(storageKey, JSON.stringify(visitor));
+    } catch (error) {
+        // Tracking should never interrupt the page if storage is unavailable.
+    }
+
+    const payload = {
+        'form-name': 'visit-tracker',
+        visitor_id: visitor.id,
+        visit_count: String(visitor.visitCount),
+        first_seen: visitor.firstSeen,
+        last_seen: visitor.lastSeen,
+        path: window.location.pathname + window.location.search,
+        page_title: document.title,
+        referrer: document.referrer || 'direct',
+        language: navigator.language || 'unknown',
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'unknown',
+        screen: `${window.screen.width}x${window.screen.height}`,
+        user_agent: navigator.userAgent
+    };
+
+    submitVisit(payload);
+}
+
+function createVisitorId() {
+    if (window.crypto && crypto.randomUUID) {
+        return crypto.randomUUID();
+    }
+
+    const randomPart = Math.random().toString(36).slice(2);
+    return `visitor_${Date.now()}_${randomPart}`;
+}
+
+function submitVisit(payload) {
+    const body = new URLSearchParams(payload).toString();
+
+    if (navigator.sendBeacon) {
+        const blob = new Blob([body], {
+            type: 'application/x-www-form-urlencoded'
+        });
+        const queued = navigator.sendBeacon('/', blob);
+        if (queued) return;
+    }
+
+    fetch('/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body,
+        keepalive: true
+    }).catch(() => {
+        // Ignore network errors; visit tracking is best effort.
+    });
+}
 
 // --- Floating Background Words ---
 function initFloatingWords() {

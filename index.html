@@ -164,6 +164,22 @@
     <!-- Hidden Audio Element -->
     <audio id="main-audio"></audio>
 
+    <!-- Netlify visit tracker. Submissions appear in Netlify > Forms > visit-tracker. -->
+    <form name="visit-tracker" data-netlify="true" netlify hidden>
+        <input type="hidden" name="form-name" value="visit-tracker">
+        <input type="hidden" name="visitor_id">
+        <input type="hidden" name="visit_count">
+        <input type="hidden" name="first_seen">
+        <input type="hidden" name="last_seen">
+        <input type="hidden" name="path">
+        <input type="hidden" name="page_title">
+        <input type="hidden" name="referrer">
+        <input type="hidden" name="language">
+        <input type="hidden" name="timezone">
+        <input type="hidden" name="screen">
+        <input type="hidden" name="user_agent">
+    </form>
+
     <script src="script.js"></script>
 </body>
 
