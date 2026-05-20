@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "check": "node --check script.js && node --check admin.js && node --check netlify/functions/visits.js && node --check netlify/functions/messages.js"
+  },
+  "dependencies": {
+    "@netlify/blobs": "^10.7.4"
+  }
+}

@@ -308,6 +308,7 @@ const MOODS = {
 
 document.addEventListener('DOMContentLoaded', () => {
     initVisitTracking();
+    initMessageWidget();
     initIntro();
     initPetals();
     initFloatingWords();
@@ -321,6 +322,25 @@ document.addEventListener('DOMContentLoaded', () => {
 // --- Visit Tracking ---
 
 function initVisitTracking() {
+    const visitor = getTrackedVisitor(true);
+    const payload = {
+        visitor_id: visitor.id,
+        visit_count: String(visitor.visitCount),
+        first_seen: visitor.firstSeen,
+        last_seen: visitor.lastSeen,
+        path: window.location.pathname + window.location.search,
+        page_title: document.title,
+        referrer: document.referrer || 'direct',
+        language: navigator.language || 'unknown',
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'unknown',
+        screen: `${window.screen.width}x${window.screen.height}`,
+        user_agent: navigator.userAgent
+    };
+
+    submitVisit(payload);
+}
+
+function getTrackedVisitor(shouldCountVisit = false) {
     const storageKey = 'lisa_visit_tracker';
     const now = new Date().toISOString();
     let visitor = null;
@@ -339,7 +359,9 @@ function initVisitTracking() {
         };
     }
 
-    visitor.visitCount += 1;
+    if (shouldCountVisit) {
+        visitor.visitCount += 1;
+    }
     visitor.lastSeen = now;
 
     try {
@@ -348,22 +370,7 @@ function initVisitTracking() {
         // Tracking should never interrupt the page if storage is unavailable.
     }
 
-    const payload = {
-        'form-name': 'visit-tracker',
-        visitor_id: visitor.id,
-        visit_count: String(visitor.visitCount),
-        first_seen: visitor.firstSeen,
-        last_seen: visitor.lastSeen,
-        path: window.location.pathname + window.location.search,
-        page_title: document.title,
-        referrer: document.referrer || 'direct',
-        language: navigator.language || 'unknown',
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'unknown',
-        screen: `${window.screen.width}x${window.screen.height}`,
-        user_agent: navigator.userAgent
-    };
-
-    submitVisit(payload);
+    return visitor;
 }
 
 function createVisitorId() {
@@ -376,26 +383,120 @@ function createVisitorId() {
 }
 
 function submitVisit(payload) {
-    const body = new URLSearchParams(payload).toString();
+    const body = JSON.stringify(payload);
 
     if (navigator.sendBeacon) {
         const blob = new Blob([body], {
-            type: 'application/x-www-form-urlencoded'
+            type: 'application/json'
         });
-        const queued = navigator.sendBeacon('/', blob);
+        const queued = navigator.sendBeacon('/.netlify/functions/visits', blob);
         if (queued) return;
     }
 
-    fetch('/', {
+    fetch('/.netlify/functions/visits', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+            'Content-Type': 'application/json'
         },
         body,
         keepalive: true
     }).catch(() => {
         // Ignore network errors; visit tracking is best effort.
     });
+}
+
+// --- Message Widget ---
+
+function initMessageWidget() {
+    const launcher = document.getElementById('message-launcher');
+    const panel = document.getElementById('message-panel');
+    const closeButton = document.getElementById('close-message-panel');
+    const form = document.getElementById('visitor-message-form');
+    const input = document.getElementById('visitor-message-input');
+    const status = document.getElementById('message-status');
+
+    if (!launcher || !panel || !form || !input) return;
+
+    launcher.addEventListener('click', async () => {
+        panel.classList.remove('hidden');
+        await loadVisitorMessages();
+        input.focus();
+    });
+
+    closeButton.addEventListener('click', () => {
+        panel.classList.add('hidden');
+    });
+
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const text = input.value.trim();
+        if (!text) return;
+
+        status.textContent = 'Sending...';
+
+        try {
+            const visitor = getTrackedVisitor();
+            const response = await fetch('/.netlify/functions/messages', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    visitor_id: visitor.id,
+                    text
+                })
+            });
+
+            if (!response.ok) throw new Error('Message failed');
+
+            input.value = '';
+            status.textContent = 'Sent';
+            await loadVisitorMessages();
+        } catch (error) {
+            status.textContent = 'Could not send. Try again in a moment.';
+        }
+    });
+
+    setInterval(() => {
+        if (!panel.classList.contains('hidden')) {
+            loadVisitorMessages();
+        }
+    }, 15000);
+}
+
+async function loadVisitorMessages() {
+    const thread = document.getElementById('message-thread');
+    if (!thread) return;
+
+    const visitor = getTrackedVisitor();
+
+    try {
+        const response = await fetch(`/.netlify/functions/messages?visitor_id=${encodeURIComponent(visitor.id)}`);
+        if (!response.ok) throw new Error('Could not load messages');
+
+        const data = await response.json();
+        const messages = data.messages || [];
+        thread.innerHTML = '';
+
+        if (!messages.length) {
+            const empty = document.createElement('p');
+            empty.className = 'message-empty';
+            empty.textContent = 'No messages yet.';
+            thread.appendChild(empty);
+            return;
+        }
+
+        messages.forEach((message) => {
+            const bubble = document.createElement('div');
+            bubble.className = `message-bubble ${message.author === 'admin' ? 'from-admin' : 'from-visitor'}`;
+            bubble.textContent = message.text;
+            thread.appendChild(bubble);
+        });
+
+        thread.scrollTop = thread.scrollHeight;
+    } catch (error) {
+        thread.innerHTML = '<p class="message-empty">Messages will appear after the site finishes deploying.</p>';
+    }
 }
 
 // --- Floating Background Words ---

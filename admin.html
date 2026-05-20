@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lisa Admin</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body class="admin-body">
+    <div id="photo-bg"></div>
+
+    <main class="admin-shell">
+        <section id="admin-login" class="admin-login-card">
+            <h1>Private View</h1>
+            <p>Enter the password to see visits and messages.</p>
+            <form id="admin-login-form">
+                <input id="admin-password" type="password" placeholder="Password" autocomplete="current-password">
+                <button class="gold-btn" type="submit">Open</button>
+            </form>
+            <p id="admin-login-error"></p>
+        </section>
+
+        <section id="admin-dashboard" class="hidden">
+            <div class="admin-topbar">
+                <div>
+                    <h1>Visitor Tracker</h1>
+                    <p id="admin-summary">Loading...</p>
+                </div>
+                <button id="admin-refresh" class="gold-btn">Refresh</button>
+            </div>
+
+            <div class="admin-grid">
+                <section class="admin-panel">
+                    <h2>Visits</h2>
+                    <div id="visits-list" class="admin-list"></div>
+                </section>
+
+                <section class="admin-panel">
+                    <h2>Messages</h2>
+                    <div id="messages-list" class="admin-list"></div>
+                </section>
+            </div>
+        </section>
+    </main>
+
+    <script src="admin.js"></script>
+</body>
+
+</html>

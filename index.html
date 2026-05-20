@@ -164,6 +164,24 @@
     <!-- Hidden Audio Element -->
     <audio id="main-audio"></audio>
 
+    <!-- Simple message widget -->
+    <button id="message-launcher" aria-label="Open messages">Message</button>
+    <aside id="message-panel" class="hidden" aria-label="Message panel">
+        <div class="message-header">
+            <div>
+                <p class="message-kicker">Private note</p>
+                <h3>Write to me</h3>
+            </div>
+            <button id="close-message-panel" aria-label="Close messages">&times;</button>
+        </div>
+        <div id="message-thread"></div>
+        <form id="visitor-message-form">
+            <textarea id="visitor-message-input" placeholder="Type your message..." rows="3"></textarea>
+            <button class="gold-btn message-send-btn" type="submit">Send</button>
+        </form>
+        <p id="message-status"></p>
+    </aside>
+
     <!-- Netlify visit tracker. Submissions appear in Netlify > Forms > visit-tracker. -->
     <form name="visit-tracker" method="POST" action="/" data-netlify="true" netlify hidden>
         <input type="hidden" name="form-name" value="visit-tracker">
