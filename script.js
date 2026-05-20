@@ -426,6 +426,8 @@ function submitVisit(payload) {
 
 // --- Message Widget ---
 
+const MESSAGE_CACHE_KEY = 'lisa_shared_messages_cache';
+
 function initMessageWidget() {
     const launcher = document.getElementById('message-launcher');
     const panel = document.getElementById('message-panel');
@@ -456,6 +458,16 @@ function initMessageWidget() {
         const visitor = getTrackedVisitor();
 
         try {
+            const message = {
+                id: `local_${Date.now()}`,
+                visitorId: visitor.id,
+                text,
+                author: 'visitor',
+                createdAt: new Date().toISOString()
+            };
+
+            addCachedMessage(message);
+            renderMessageThread(getCachedMessages());
             await sendVisitorMessage(visitor, text);
             input.value = '';
             status.textContent = 'Sent';
@@ -525,26 +537,60 @@ async function loadVisitorMessages() {
 
         const data = await response.json();
         const messages = data.messages || [];
-        thread.innerHTML = '';
-
-        if (!messages.length) {
-            const empty = document.createElement('p');
-            empty.className = 'message-empty';
-            empty.textContent = 'No messages yet.';
-            thread.appendChild(empty);
-            return;
-        }
-
-        messages.forEach((message) => {
-            const bubble = document.createElement('div');
-            bubble.className = `message-bubble ${message.author === 'admin' ? 'from-admin' : 'from-visitor'}`;
-            bubble.textContent = message.author === 'admin' ? `Me: ${message.text}` : `Visitor: ${message.text}`;
-            thread.appendChild(bubble);
-        });
-
-        thread.scrollTop = thread.scrollHeight;
+        setCachedMessages(messages);
+        renderMessageThread(messages);
     } catch (error) {
-        thread.innerHTML = '<p class="message-empty">Messages will appear after the site finishes deploying.</p>';
+        const cachedMessages = getCachedMessages();
+        renderMessageThread(cachedMessages);
+    }
+}
+
+function renderMessageThread(messages) {
+    const thread = document.getElementById('message-thread');
+    if (!thread) return;
+
+    thread.innerHTML = '';
+
+    if (!messages.length) {
+        const empty = document.createElement('p');
+        empty.className = 'message-empty';
+        empty.textContent = 'No messages yet. Send one and it will appear here.';
+        thread.appendChild(empty);
+        return;
+    }
+
+    messages.forEach((message) => {
+        const bubble = document.createElement('div');
+        bubble.className = `message-bubble ${message.author === 'admin' ? 'from-admin' : 'from-visitor'}`;
+        bubble.textContent = message.author === 'admin' ? `Me: ${message.text}` : `Visitor: ${message.text}`;
+        thread.appendChild(bubble);
+    });
+
+    thread.scrollTop = thread.scrollHeight;
+}
+
+function getCachedMessages() {
+    try {
+        return JSON.parse(localStorage.getItem(MESSAGE_CACHE_KEY) || '[]');
+    } catch (error) {
+        return [];
+    }
+}
+
+function setCachedMessages(messages) {
+    try {
+        localStorage.setItem(MESSAGE_CACHE_KEY, JSON.stringify(messages.slice(-100)));
+    } catch (error) {
+        // Ignore storage errors; the live request path still works.
+    }
+}
+
+function addCachedMessage(message) {
+    const messages = getCachedMessages();
+    const exists = messages.some((cached) => cached.id === message.id);
+    if (!exists) {
+        messages.push(message);
+        setCachedMessages(messages);
     }
 }
 
