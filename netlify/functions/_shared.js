@@ -1,6 +1,6 @@
 const { getStore } = require('@netlify/blobs');
 
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '882336201';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
 function json(statusCode, body) {
     return {
@@ -25,7 +25,7 @@ function parseBody(event) {
 
 function isAdmin(event) {
     const password = event.headers['x-admin-password'] || event.headers['X-Admin-Password'];
-    return password === ADMIN_PASSWORD;
+    return Boolean(ADMIN_PASSWORD) && password === ADMIN_PASSWORD;
 }
 
 function sanitizeText(value, maxLength) {
