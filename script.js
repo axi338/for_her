@@ -453,27 +453,25 @@ function initMessageWidget() {
         const text = input.value.trim();
         if (!text) return;
 
+        const visitor = getTrackedVisitor();
+        const message = {
+            id: `local_${Date.now()}`,
+            visitorId: visitor.id,
+            text,
+            author: 'visitor',
+            createdAt: new Date().toISOString()
+        };
+
+        addCachedMessage(message);
+        renderMessageThread(getCachedMessages());
+        input.value = '';
         status.textContent = 'Sending...';
 
-        const visitor = getTrackedVisitor();
-
         try {
-            const message = {
-                id: `local_${Date.now()}`,
-                visitorId: visitor.id,
-                text,
-                author: 'visitor',
-                createdAt: new Date().toISOString()
-            };
-
-            addCachedMessage(message);
-            renderMessageThread(getCachedMessages());
             await sendVisitorMessage(visitor, text);
-            input.value = '';
             status.textContent = 'Sent';
-            await loadVisitorMessages();
         } catch (error) {
-            status.textContent = 'Could not send. Try again in a moment.';
+            status.textContent = 'Saved here. I will keep trying when you reopen this.';
         }
     });
 
@@ -536,7 +534,7 @@ async function loadVisitorMessages() {
         if (!response.ok) throw new Error('Could not load messages');
 
         const data = await response.json();
-        const messages = data.messages || [];
+        const messages = mergeMessages(getCachedMessages(), data.messages || []);
         setCachedMessages(messages);
         renderMessageThread(messages);
     } catch (error) {
@@ -586,12 +584,26 @@ function setCachedMessages(messages) {
 }
 
 function addCachedMessage(message) {
-    const messages = getCachedMessages();
-    const exists = messages.some((cached) => cached.id === message.id);
-    if (!exists) {
-        messages.push(message);
-        setCachedMessages(messages);
-    }
+    setCachedMessages(mergeMessages(getCachedMessages(), [message]));
+}
+
+function mergeMessages(currentMessages, incomingMessages) {
+    const messages = [...currentMessages];
+
+    incomingMessages.forEach((message) => {
+        const exists = messages.some((cached) => {
+            if (cached.id && message.id && cached.id === message.id) return true;
+            return cached.text === message.text &&
+                cached.author === message.author &&
+                Math.abs(new Date(cached.createdAt) - new Date(message.createdAt)) < 5000;
+        });
+
+        if (!exists) messages.push(message);
+    });
+
+    return messages
+        .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+        .slice(-100);
 }
 
 // --- Floating Background Words ---
