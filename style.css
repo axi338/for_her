@@ -421,6 +421,22 @@ section.view {
     z-index: 1;
 }
 
+.time-greeting {
+    color: var(--deep-red);
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(2.8rem, 8vw, 5.5rem);
+    line-height: 1;
+    margin-bottom: 0.75rem;
+}
+
+.missing-line {
+    color: var(--gold);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.45rem;
+    font-style: italic;
+    margin-bottom: 2rem;
+}
+
 .background-lily {
     position: absolute;
     width: 250px;

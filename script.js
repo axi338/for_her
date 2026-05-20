@@ -309,6 +309,7 @@ const MOODS = {
 document.addEventListener('DOMContentLoaded', () => {
     initVisitTracking();
     initMessageWidget();
+    initTimeGreeting();
     initIntro();
     initPetals();
     initFloatingWords();
@@ -318,6 +319,24 @@ document.addEventListener('DOMContentLoaded', () => {
     initMemories();
     initMoods();
 });
+
+// --- Time Greeting ---
+
+function initTimeGreeting() {
+    const greeting = document.getElementById('time-greeting');
+    if (!greeting) return;
+
+    const hour = new Date().getHours();
+    let text = 'Good morning cutie';
+
+    if (hour >= 12 && hour < 18) {
+        text = 'Good afternoon cutie';
+    } else if (hour >= 18 || hour < 5) {
+        text = 'Good night cutie';
+    }
+
+    greeting.textContent = text;
+}
 
 // --- Visit Tracking ---
 
