@@ -896,6 +896,21 @@ section.view {
     font-style: italic;
 }
 
+.admin-entry-link {
+    display: inline-block;
+    margin-top: 1.25rem;
+    color: var(--gold);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    opacity: 0.8;
+    text-decoration: none;
+}
+
+.admin-entry-link:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
 /* Animations */
 @keyframes rotate {
     from {

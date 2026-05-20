@@ -22,14 +22,8 @@ exports.handler = async (event) => {
             });
         }
 
-        const visitorId = sanitizeText(event.queryStringParameters && event.queryStringParameters.visitor_id, 120);
-        if (!visitorId) {
-            return json(400, { error: 'Missing visitor id' });
-        }
-
         return json(200, {
             messages: messages
-                .filter((message) => message.visitorId === visitorId)
                 .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
         });
     }

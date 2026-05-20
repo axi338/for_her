@@ -500,10 +500,8 @@ async function loadVisitorMessages() {
     const thread = document.getElementById('message-thread');
     if (!thread) return;
 
-    const visitor = getTrackedVisitor();
-
     try {
-        const response = await fetch(`/.netlify/functions/messages?visitor_id=${encodeURIComponent(visitor.id)}`);
+        const response = await fetch('/.netlify/functions/messages');
         if (!response.ok) throw new Error('Could not load messages');
 
         const data = await response.json();
@@ -521,7 +519,7 @@ async function loadVisitorMessages() {
         messages.forEach((message) => {
             const bubble = document.createElement('div');
             bubble.className = `message-bubble ${message.author === 'admin' ? 'from-admin' : 'from-visitor'}`;
-            bubble.textContent = message.text;
+            bubble.textContent = message.author === 'admin' ? `Me: ${message.text}` : `Visitor: ${message.text}`;
             thread.appendChild(bubble);
         });
 
