@@ -42,7 +42,7 @@ async function loadDashboard() {
         }
 
         if (!visitsResponse.ok || !messagesResponse.ok) {
-            throw new Error('Could not load tracker data yet');
+            throw new Error(`Could not load tracker data yet. Visits: ${visitsResponse.status}, Messages: ${messagesResponse.status}`);
         }
 
         const visitsData = await visitsResponse.json();

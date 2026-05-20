@@ -12,7 +12,7 @@ const {
 const VISITS_KEY = 'visits.json';
 
 exports.handler = async (event) => {
-    const store = getAppStore();
+    const store = await getAppStore();
 
     if (event.httpMethod === 'GET') {
         if (!isAdmin(event)) {

@@ -1,5 +1,3 @@
-const { getStore } = require('@netlify/blobs');
-
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
 function json(statusCode, body) {
@@ -38,7 +36,9 @@ function getClientIp(event) {
     return forwardedFor.split(',')[0].trim() || 'unknown';
 }
 
-function getAppStore() {
+async function getAppStore() {
+    const { getStore } = await import('@netlify/blobs');
+
     return getStore({
         name: 'for-her-tracker',
         consistency: 'strong'

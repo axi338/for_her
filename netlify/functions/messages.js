@@ -11,7 +11,7 @@ const {
 const MESSAGES_KEY = 'messages.json';
 
 exports.handler = async (event) => {
-    const store = getAppStore();
+    const store = await getAppStore();
 
     if (event.httpMethod === 'GET') {
         const messages = await readJSON(store, MESSAGES_KEY, []);
