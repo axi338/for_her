@@ -1,0 +1,12 @@
+{
+  "id": "resting",
+  "title": "Resting",
+  "subtitle": "Mentally exhausted.",
+  "description": "Slow down and breathe. Calm ambient soundscapes designed to quiet the mind and ease exhaustion.",
+  "cover": "/photos_to_use/mood_resting.webp",
+  "background": "/photos_to_use/mood_resting.webp",
+  "glowColor": "rgba(134, 239, 172, 0.4)",
+  "colorOpacity": "rgba(134, 239, 172, 0.15)",
+  "emoji": "🍂",
+  "tracks": []
+}

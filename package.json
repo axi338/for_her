@@ -1,8 +1,23 @@
 {
+  "name": "for-her",
+  "version": "2.0.0",
+  "private": true,
   "scripts": {
-    "check": "node --check script.js && node --check admin.js && node --check netlify/functions/visits.js && node --check netlify/functions/messages.js"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
   },
   "dependencies": {
-    "@netlify/blobs": "^10.7.4"
+    "@netlify/blobs": "^10.7.4",
+    "framer-motion": "^11.3.0",
+    "next": "^14.2.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "typescript": "^5.4.5"
   }
 }

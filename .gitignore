@@ -1,0 +1,19 @@
+# Local Netlify folder
+.netlify
+node_modules
+.env
+.env.local
+.env*.local
+public/mock_db
+
+# Next.js
+.next/
+out/
+tsconfig.tsbuildinfo
+
+# OS / editor
+.DS_Store
+Thumbs.db
+
+# Loose media at repo root (keep public/ assets)
+/*.mp4

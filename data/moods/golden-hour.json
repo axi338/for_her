@@ -1,0 +1,12 @@
+{
+  "id": "golden-hour",
+  "title": "Golden Hour",
+  "subtitle": "Calm and grateful.",
+  "description": "Calm, warm, and deeply grateful. Golden melodies that feel like a warm hug at sunset.",
+  "cover": "/photos_to_use/mood_golden_hour.webp",
+  "background": "/photos_to_use/mood_golden_hour.webp",
+  "glowColor": "rgba(252, 211, 77, 0.4)",
+  "colorOpacity": "rgba(252, 211, 77, 0.15)",
+  "emoji": "☀️",
+  "tracks": []
+}

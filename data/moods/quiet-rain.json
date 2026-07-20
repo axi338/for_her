@@ -1,0 +1,12 @@
+{
+  "id": "quiet-rain",
+  "title": "Quiet Rain",
+  "subtitle": "A peaceful sadness.",
+  "description": "A peaceful, serene sadness. Find comfort in the rhythmic sound of rain and gentle piano keys.",
+  "cover": "/photos_to_use/mood_quiet_rain.webp",
+  "background": "/photos_to_use/mood_quiet_rain.webp",
+  "glowColor": "rgba(125, 211, 252, 0.4)",
+  "colorOpacity": "rgba(125, 211, 252, 0.15)",
+  "emoji": "🌧️",
+  "tracks": []
+}

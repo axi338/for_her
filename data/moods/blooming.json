@@ -1,0 +1,12 @@
+{
+  "id": "blooming",
+  "title": "Blooming",
+  "subtitle": "Everything feels bright.",
+  "description": "Everything feels bright, fresh, and full of potential. A melody for gentle sunrises and new beginnings.",
+  "cover": "/photos_to_use/mood_blooming.webp",
+  "background": "/photos_to_use/mood_blooming.webp",
+  "glowColor": "rgba(249, 168, 212, 0.4)",
+  "colorOpacity": "rgba(249, 168, 212, 0.15)",
+  "emoji": "🌸",
+  "tracks": []
+}

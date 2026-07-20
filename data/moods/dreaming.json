@@ -1,0 +1,12 @@
+{
+  "id": "dreaming",
+  "title": "Dreaming",
+  "subtitle": "Lost in imagination.",
+  "description": "Lose yourself in imagination. Ethereal, spacey melodies to carry you away into starry nightscapes.",
+  "cover": "/photos_to_use/mood_dreaming.webp",
+  "background": "/photos_to_use/mood_dreaming.webp",
+  "glowColor": "rgba(196, 181, 253, 0.4)",
+  "colorOpacity": "rgba(196, 181, 253, 0.15)",
+  "emoji": "✨",
+  "tracks": []
+}

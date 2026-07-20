@@ -1,0 +1,12 @@
+{
+  "id": "longing",
+  "title": "Longing",
+  "subtitle": "Missing someone or something.",
+  "description": "For the quiet hours of missing someone. Soft acoustic notes and nostalgic echoes that touch the soul.",
+  "cover": "/photos_to_use/mood_longing.webp",
+  "background": "/photos_to_use/mood_longing.webp",
+  "glowColor": "rgba(167, 139, 250, 0.4)",
+  "colorOpacity": "rgba(167, 139, 250, 0.15)",
+  "emoji": "🌙",
+  "tracks": []
+}
