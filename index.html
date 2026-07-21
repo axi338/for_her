@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,[...]"
         rel="stylesheet">
 </head>
 
@@ -51,7 +51,7 @@
     <!-- Main Content Wrapped for smooth transition -->
     <main id="main-content" class="hidden">
 
-        <!-- Navigation (Optional but helpful for smooth UX) -->
+        <!-- Navigation -->
         <nav id="top-nav">
             <div class="nav-links">
                 <a href="#home">You</a>
@@ -62,37 +62,21 @@
             </div>
         </nav>
 
-        <!-- 2. Home Section -->
-        <!-- <section id="home" class="view">
-            <div class="carpet-container"> -->
-        <!-- Much better placement for the decorative lilies -->
-        <!-- <img src="photos_to_use/photo_3.jpg" alt="Lily" class="background-lily lily-left">
-                <img src="photos_to_use/photo_3.jpg" alt="Lily" class="background-lily lily-right">
-
-                <div class="paper-card main-card">
-                    <h2 id="time-greeting" class="time-greeting">Good morning cutie</h2>
-                    <p class="missing-line"> Yes, I miss you</p>
-                    <p class="romantic-quote">
-                        “I might not be good at everything, but I’m good at loving you.”
-                    </p>
-                </div>
-            </div>
-        </section> -->
-
-        <!-- 3. Fairuz Music Player -->
+        <!-- 2. Fairuz Music Player -->
         <section id="fairuz" class="view">
-            <div class="spotify-player-container">
+            <div class="music-player-container">
                 <div class="player-header">
-                    <p class="now-playing-device">iPhone</p>
+                    <p class="now-playing-device">🎵 Music Player</p>
                 </div>
                 <div class="album-art-wrapper">
-                    <img src="photos_to_use/photo_1.webp" alt="Fairuz Album Art" id="album-art"
-                        class="spotify-album-art">
+                    <img src="photos_to_use/photo_1.webp" alt="Album Art" id="album-art"
+                        class="album-art">
                 </div>
 
-                <div class="track-info-spotify">
-                    <h3 id="current-song-title">Ana Lahabeebi</h3>
+                <div class="track-info">
+                    <h3 id="current-song-title">Konna Netlaka</h3>
                     <p class="artist-name" id="current-artist">Fairuz</p>
+                    <p class="release-info" id="release-info"></p>
                 </div>
 
                 <div class="progress-container">
@@ -101,19 +85,19 @@
                     <span id="total-time">0:00</span>
                 </div>
 
-                <div class="audio-controls-spotify">
-                    <button id="prev-btn" class="icon-btn-spotify">⏮</button>
-                    <button id="play-pause-btn" class="icon-btn-spotify main-play-spotify">▶</button>
-                    <button id="next-btn" class="icon-btn-spotify">⏭</button>
+                <div class="audio-controls">
+                    <button id="prev-btn" class="icon-btn">⏮</button>
+                    <button id="play-pause-btn" class="icon-btn main-play">▶</button>
+                    <button id="next-btn" class="icon-btn">⏭</button>
                 </div>
 
                 <div class="extra-controls">
-                    <button id="karaoke-toggle" class="gold-btn spotify-karaoke-btn">Karaoke Lyrics</button>
+                    <button id="karaoke-toggle" class="gold-btn karaoke-btn">Karaoke Lyrics</button>
                 </div>
             </div>
         </section>
 
-        <!-- 4. Karaoke Lyrics Mode Overlay -->
+        <!-- 3. Karaoke Lyrics Mode Overlay -->
         <div id="karaoke-overlay" class="hidden">
             <button id="close-karaoke" class="close-btn">&times;</button>
             <div id="lyrics-container">
@@ -121,7 +105,7 @@
             </div>
         </div>
 
-        <!-- 5. Lily Section (Swipeable Gallery) -->
+        <!-- 4. Lily Section (Swipeable Gallery) -->
         <section id="lilies" class="view">
             <h2 class="section-title">Garden of Lilies</h2>
             <div class="swipeable-gallery" id="lily-gallery">
@@ -130,7 +114,7 @@
             <div class="swipe-hint">Swipe to explore <span>&rarr;</span></div>
         </section>
 
-        <!-- 6. Notes Section -->
+        <!-- 5. Notes Section -->
         <section id="notes" class="view">
             <h2 class="section-title">Notes to Remember</h2>
             <div class="notebook">
@@ -142,7 +126,7 @@
             </div>
         </section>
 
-        <!-- 7. Memory Cards -->
+        <!-- 6. Memory Cards -->
         <section id="memories" class="view">
             <h2 class="section-title">Reasons why</h2>
             <div class="memory-grid">
@@ -150,10 +134,10 @@
             </div>
         </section>
 
-        <!-- 8. Final Section -->
+        <!-- 7. Final Section -->
         <section id="final-section" class="view">
             <div class="final-card" style="text-align: center;">
-                <p>“This website is small, but the feeling behind it is not.”</p>
+                <p>"This website is small, but the feeling behind it is not."</p>
                 <h3 class="lisa-tribute">For the Pritiest girl Lisa</h3>
                 <p class="little-comment">i know you liked it</p>
                 <button id="replay-magic" class="gold-btn">Replay the magic</button>
@@ -211,7 +195,7 @@
         <input type="hidden" name="user_agent">
     </form>
 
-    <script src="script.js?v=chat-local-2"></script>
+    <script src="script.js?v=musicbrainz-1"></script>
 </body>
 
 </html>
