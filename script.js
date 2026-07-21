@@ -1,3 +1,106 @@
+// --- MusicBrainz Integration ---
+
+/**
+ * MusicBrainz API Client for song metadata enrichment
+ * No API key required - public API
+ */
+
+const MUSICBRAINZ_ENDPOINT = 'https://musicbrainz.org/ws/2';
+const USER_AGENT = 'ForHerApp/1.0 (https://github.com/axi338/for_her)';
+
+async function searchMusicBrainzRecording(title, artist) {
+    const query = `recording:"${title}" artist:"${artist}"`;
+    const url = `${MUSICBRAINZ_ENDPOINT}/recording?query=${encodeURIComponent(query)}&fmt=json&limit=1`;
+
+    try {
+        const response = await fetch(url, {
+            headers: { 'User-Agent': USER_AGENT }
+        });
+
+        if (!response.ok) throw new Error(`Status ${response.status}`);
+        const data = await response.json();
+
+        if (data.recordings && data.recordings.length > 0) {
+            const recording = data.recordings[0];
+            return {
+                id: recording.id,
+                title: recording.title,
+                artist: recording['artist-credit']?.[0]?.name || artist,
+                length: recording.length,
+                firstReleaseDate: recording['first-release-date'],
+                releaseId: recording.releases?.[0]?.id
+            };
+        }
+        return null;
+    } catch (error) {
+        console.warn(`MusicBrainz lookup failed for "${title}" by "${artist}":`, error.message);
+        return null;
+    }
+}
+
+function getCachedMBMetadata(key) {
+    try {
+        const cache = JSON.parse(localStorage.getItem('mb_cache') || '{}');
+        const entry = cache[key];
+        if (entry && Date.now() - entry.timestamp < 7 * 24 * 60 * 60 * 1000) {
+            return entry.data;
+        }
+    } catch (e) {
+        // Silent fail
+    }
+    return null;
+}
+
+function cacheMBMetadata(key, data) {
+    try {
+        const cache = JSON.parse(localStorage.getItem('mb_cache') || '{}');
+        cache[key] = { data, timestamp: Date.now() };
+        localStorage.setItem('mb_cache', JSON.stringify(cache));
+    } catch (e) {
+        // Silent fail
+    }
+}
+
+async function enrichSongsWithMusicBrainz() {
+    console.log('🎵 Enriching songs with MusicBrainz metadata...');
+    let enrichedCount = 0;
+
+    for (let i = 0; i < SONG_LIST.length; i++) {
+        const song = SONG_LIST[i];
+        const cacheKey = `${song.artist}|${song.title}`;
+
+        let metadata = getCachedMBMetadata(cacheKey);
+
+        if (!metadata) {
+            metadata = await searchMusicBrainzRecording(song.title, song.artist);
+            if (metadata) {
+                cacheMBMetadata(cacheKey, metadata);
+            }
+        }
+
+        if (metadata) {
+            song.musicbrainzId = metadata.id;
+            song.duration = metadata.length;
+            song.releaseDate = metadata.firstReleaseDate;
+            
+            // Get cover art from MusicBrainz Cover Art Archive if releaseId exists
+            if (metadata.releaseId) {
+                song.coverArtUrl = `https://coverartarchive.org/release/${metadata.releaseId}/front`;
+            }
+
+            enrichedCount++;
+            console.log(`✓ ${song.title} by ${song.artist}`);
+        }
+
+        // Rate limiting: MusicBrainz allows 1 request per second
+        if (i < SONG_LIST.length - 1) {
+            await new Promise(resolve => setTimeout(resolve, 1100));
+        }
+    }
+
+    console.log(`✅ Enrichment complete: ${enrichedCount}/${SONG_LIST.length} songs enhanced`);
+}
+
 // --- Configuration & Data ---
 
 const SONG_LIST = [
@@ -94,7 +197,7 @@ const SONG_LIST = [
         art: "photos_to_use/photo_youtube.webp",
         lyrics: [
             { time: 29.73, text: "يا أنا يا أنا أنا وياك صرنا القصص الغريبة\nYa ana ya ana, ana wiyak, serna el-qasas el-ghareebi" },
-            { time: 34.84, text: "يا أنا يا أنا أنا وياك وانسرقت مكاتيبي\nYa ana ya ana, ana wiyak, w ensara'et makateebi" },
+            { time: 34.84, text: "يا أنا يا أنا أنا وياك وانسرقت مكاتيب��\nYa ana ya ana, ana wiyak, w ensara'et makateebi" },
             { time: 39.78, text: "وعرفوا انك حبيبي، وعرفوا انك حبيبي\nW 'erfo ennak habeebi, w 'erfo ennak habeebi" },
             { time: 53.66, text: "يا أنا يا أنا هرب الصيف هربت عناقيد الزينة\nYa ana ya ana, harab es-seif, harabit 'ana'eed ez-zeeni" },
             { time: 58.63, text: "وإذا ضيعني الهوى شي صيف بقلبك بتلاقيني\nW iza dayya'ni el-hawa shi seif, b'albak btla'ini" },
@@ -299,7 +402,7 @@ const MOODS = {
         colors: {
             deepRed: "#2b1a14",
             gold: "#442D1C",
-            cream: "#c5d1d1" // Muted rainy cream
+            cream: "#c5d1d1"
         }
     }
 };
@@ -318,6 +421,11 @@ document.addEventListener('DOMContentLoaded', () => {
     initNotes();
     initMemories();
     initMoods();
+    
+    // Enrich songs with MusicBrainz (runs in background, non-blocking)
+    enrichSongsWithMusicBrainz().catch(err => 
+        console.warn('MusicBrainz enrichment failed (non-critical):', err)
+    );
 });
 
 // --- Time Greeting ---
@@ -879,7 +987,6 @@ function togglePlay() {
 
 // --- 4. Karaoke Logic ---
 
-// Parse LRC/IRC format into [{time, text}, ...]
 function parseLRC(text) {
     const lines = text.split(/\r?\n/);
     const result = [];
@@ -899,7 +1006,6 @@ function parseLRC(text) {
 
         if (!lyricText) continue;
 
-        // If same timestamp as previous, merge lines (Arabic + romanized on same cue)
         if (result.length > 0 && Math.abs(result[result.length - 1].time - totalSeconds) < 0.1) {
             result[result.length - 1].text += '\n' + lyricText;
         } else {
@@ -912,18 +1018,15 @@ function parseLRC(text) {
 function renderLyrics() {
     const container = document.getElementById('lyrics-container');
     container.innerHTML = '';
-    // Reset scroll position
     container.style.transform = 'translateY(0)';
     const song = SONG_LIST[activeSongIndex];
     song.lyrics.forEach((lyric, index) => {
         const div = document.createElement('div');
         div.className = 'lyric-line';
         div.id = `lyric-${index}`;
-        // Support multi-line cues (Arabic + romanized stacked)
         lyric.text.split('\n').forEach((part, i) => {
             const span = document.createElement('span');
             span.textContent = part;
-            // Style alternate lines: first=Arabic (larger), second=romanized (smaller, dimmer)
             if (i === 1) {
                 span.style.display = 'block';
                 span.style.fontSize = '1.1rem';
@@ -954,7 +1057,6 @@ function updateLyrics() {
         if (currentTime >= lyric.time && (index === song.lyrics.length - 1 || currentTime < song.lyrics[index + 1].time)) {
             el.className = 'lyric-line active';
 
-            // Mathematically translate container upward for smooth scrolling
             const overlayCenter = overlay.clientHeight / 2;
             const elOffset = el.offsetTop + (el.clientHeight / 2);
             container.style.transform = `translateY(${overlayCenter - elOffset}px)`;
